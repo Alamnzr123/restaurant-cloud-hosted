@@ -214,10 +214,5 @@ wss.on('connection', (ws: WebSocket) => {
 
 const PORT = Number(process.env.PORT || 4001);
 server.listen(PORT, () => {
-  const bound = server.address();
-  let host = 'localhost';
-  if (bound && typeof bound !== 'string') {
-    host = (bound.address === '::' ? '0.0.0.0' : bound.address) as string;
-  }
-  console.log(`Server listening on http://${host}:${PORT}`);
+  console.log(`Server listening on http://localhost:${PORT}`);
 });

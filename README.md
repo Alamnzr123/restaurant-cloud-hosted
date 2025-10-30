@@ -117,7 +117,7 @@ Notes and troubleshooting
 
 - If Swagger UI shows an empty page or errors, check the server console for a warning about `openapi.json` (the server logs a message when the spec is absent or invalid).
 - Ensure the server is reachable on the host/port used in the docs URL (use `localhost` when running locally).
-- The Swagger UI in this demo is not protected by authentication. For production, secure the endpoints (I can add bearer auth and update the OpenAPI spec if you want).
+- The Swagger UI in this demo is not protected by authentication. For production, secure the endpoints.
 
 For convenience, here's an end-to-end copyable example (PowerShell):
 
@@ -135,4 +135,4 @@ npm run client:start -- my-restaurant-01 .\files\file_to_download.txt ws://127.0
 node ./dist/tools/trigger-download.js my-restaurant-01 .\downloads\downloaded.bin --size=100
 ```
 
-- For production, protect the API routes (authentication) and use HTTPS/WSS. I can add bearer-token auth and update the OpenAPI spec if you want.
+- For production, protect the API routes (authentication) and use HTTPS/WSS

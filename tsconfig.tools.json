@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "noEmit": false,
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "isolatedModules": false,
+    "allowJs": false
+  },
+  "include": [
+    "tools/**/*.ts",
+    "tests/**/*.ts",
+    "types/**/*.d.ts"
+  ],
+  "exclude": ["node_modules", "src", ".next"]
+}

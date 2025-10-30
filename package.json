@@ -1,26 +1,43 @@
 {
   "name": "restaurant-cloud-hosted",
   "version": "0.1.0",
+  "type": "module",
+  "author": {
+    "email": "nzr.rahmad@gmail.com",
+    "name": "Rahmad Alamsyah Nazaruddin"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "server:start": "node ./dist/tools/run-server.js",
+    "client:start": "node ./dist/tools/run-client.js",
+    "tools:trigger": "node ./dist/tools/trigger-download.js",
+    "tools:genfile": "node ./dist/tools/gen-file.js",
+    "test:transfer": "node ./tests/transfer.test.js"
   },
   "dependencies": {
+    "express": "^4.18.2",
+    "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "next": "16.0.1"
+    "swagger-ui-express": "^4.6.3",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
+    "@types/express": "^4.17.17",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/ws": "^8.5.4",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1"
+    "eslint-config-next": "16.0.1",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.1",
+    "typescript": "^5"
   }
 }

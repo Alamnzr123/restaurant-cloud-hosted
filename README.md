@@ -1,40 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Server-initiated download from on-premise clients
 
-## Getting Started
+This folder adds a small server and client toolset to demonstrate how a cloud server
+can request and receive a large file (100MB) from an on-premise client behind NAT.
 
-First, run the development server:
+Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+to the server over the existing WebSocket connection. The server writes the incoming
+binary chunks to disk.
+
+## Quickstart (Windows PowerShell)
+
+1. Install dependencies
+
+```powershell
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Build the TypeScript tools (creates `dist/tools`)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```powershell
+npx tsc -p tsconfig.tools.json
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+3. Generate a 100 MB file in the project root (client-side)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+```powershell
+npm run tools:genfile
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Start the server (compiled) from the project root
 
-## Learn More
+```powershell
+npm run server:start
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. Start the client on the on-premise machine (compiled), You can register as much for the client name
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+```powershell
+# <client-id> is any identifier the client will register with the server
+# The second argument is the path on the *client* machine that the client will read and stream.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+npm run client:start -- my-restaurant-01 .\files\file_to_download.txt ws://localhost:4001/ws
+```
 
-## Deploy on Vercel
+Add another client (if needed)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```powershell
+npm run client:start -- my-restaurant-02 .\files\file_to_download.txt ws://localhost:4001/ws
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+6. Trigger a download from any machine that can reach the server API
+
+```powershell
+# using the bundled trigger tool (compiled)
+# NOTE: the destPath here is on the *server* machine — it is where the server will save the received file.
+
+npm run tools:trigger my-restaurant-01
+```
+
+OR
+
+```powershell
+npm run tools:trigger my-restaurant-01 .\downloads\downloadled.bin
+```
+
+## Files of interest
+
+- `tools/server.ts` — server with WebSocket endpoint and POST `/download` API.
+- `tools/client.ts` — example client that registers and streams local file on request.
+- `tools/trigger-download.ts` — simple CLI to call server API to trigger a download.
+- `tools/gen-file.ts` — generate a large test file (default 100MB).
+- `tests/transfer.test.ts` — automated TypeScript test that spawns server & client and validates file checksums.
+
+Notes
+
+- The project provides a Swagger UI at `/docs` and the raw OpenAPI JSON at `/openapi.json` (when the server is running). Use it to call `/download` interactively.
+
+- For production, protect the API routes (authentication) and use HTTPS/WSS. I can add bearer-token auth and update the OpenAPI spec if you want.

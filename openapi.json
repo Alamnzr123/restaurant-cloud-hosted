@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Restaurant Client File Download API",
+    "version": "1.0.0",
+    "description": "APIs to trigger file download from registered on-premise clients"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health and connected client count",
+        "responses": {
+          "200": {
+            "description": "Server health",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "ok": { "type": "boolean" }, "clients": { "type": "integer" } } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/download": {
+      "post": {
+        "summary": "Request a connected client to stream its file to server",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clientId": { "type": "string" },
+                  "destPath": { "type": "string" }
+                },
+                "required": ["clientId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Download started or completed", "content": { "application/json": { "schema": { "type": "object" } } } },
+          "4xx": { "description": "Client not connected or bad request" }
+        }
+      }
+    }
+  }
+}
